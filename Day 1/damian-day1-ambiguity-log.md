@@ -25,7 +25,7 @@
 
 
 | Metric | Target | Achieved |
-|--------|--------|----------|
+|:---|:----:|:----:|
 | Items found | 10+ | 10 |
 | High-priority items | 3+ | 4 |
 | Items convertible to test cases | 5+ | 7 |
