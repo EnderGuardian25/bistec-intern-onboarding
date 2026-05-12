@@ -11,6 +11,7 @@ LearnLanka is a platform that connects Sri Lankan O/L and A/L students with vett
 1. Find Tutors based on their language, subject and price.
 2. Confirm a booking slot with a tutor and make the payment.
 3. Review and leave comments for tutors after sessions.
+4. Create a student user and track personal tutoring data.
 
 #### Frustrations :
 1. Tutors may cancel bookings.
@@ -23,6 +24,7 @@ LearnLanka is a platform that connects Sri Lankan O/L and A/L students with vett
 1. Recieve and confirm bookings from students looking for tutors.
 2. Recieve weekly payments on completed tutoring sessions.
 3. Review and leave comments for students after sessions.
+4. Create a Tutor account and maintain high ratings to increase student engagement.
 
 #### Frustrations :
 1. Payment delays may occur.
@@ -55,8 +57,9 @@ LearnLanka is a platform that connects Sri Lankan O/L and A/L students with vett
 ## 4. Non-Functional Requirements
 | Category | Metric | Target | How we'll measure it |
 | :--- | :--- | :--- | :--- |
-| Tutor Search results | latency | 95% of all search requests return in under 800ms | Scaled unit testing for search engine |
-| Uptime | Month based | 99.5% platform uptime per month leaving only about 4 hours for meintenance | Ensure no bugs are implemented before launch to reduce meintenance | 
+| latency | Search API response time, p95 | <800ms | Azure application insights |
+| Uptime | booking endpoint successful response% | 99.5% platform uptime per month leaving only about 4 hours for meintenance | Azure Monitor |
+| Concurrency| Active video sessions | >= 200 simultaneous  | Daily.co dashboard |
 
 ## 5. Assumptions
 1. Tutors can also leave a review for students.
