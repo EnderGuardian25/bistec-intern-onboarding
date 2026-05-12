@@ -60,6 +60,7 @@ LearnLanka is a platform that connects Sri Lankan O/L and A/L students with vett
 | latency | Search API response time, p95 | <800ms | Azure application insights |
 | Uptime | booking endpoint successful response% | 99.5% platform uptime per month leaving only about 4 hours for meintenance | Azure Monitor |
 | Concurrency| Active video sessions | >= 200 simultaneous  | Daily.co dashboard |
+| Scalability | Concurrent Users | Support up to 10,000 active concurrent video sessions | Simulated stress testing by auto-scaling. |
 
 ## 5. Assumptions
 1. Tutors can also leave a review for students.
