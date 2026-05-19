@@ -2,7 +2,7 @@
 
 ## Setup
 * **Prism Command Used:** `npx @stoplight/prism-cli mock openapi.yaml -p 4010`
-* **Testing Client:** Bruno Collection (`/tests/bookswap-smoke.bru`) targeting local Prism proxy variables.
+* **Testing Client:** Bruno Collection
 
 ## Results Summary
 
