@@ -1,0 +1,364 @@
+openapi: 3.1.0
+info:
+  title: BookSwap API
+  version: 1.0.0
+  description: API for BookSwap, a community book-sharing application for neighbors in a Colombo apartment block.
+servers:
+  - url: https://api.bookswap.colombo/v1
+paths:
+  /books:
+    get:
+      summary: Search the building catalog by title, author, or ISBN, and filter by book condition.
+      operationId: searchBooks
+      parameters:
+        - name: q
+          in: query
+          description: Search query for title, author, or ISBN
+          required: false
+          schema:
+            type: string
+        - name: condition
+          in: query
+          description: Filter books by condition
+          required: false
+          schema:
+            $ref: '#/components/schemas/BookCondition'
+        - name: page
+          in: query
+          description: Page number for pagination
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+        - name: pageSize
+          in: query
+          description: Number of items per page
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+      responses:
+        '200':
+          description: Paginated list of books matching search criteria
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/PaginatedResponse'
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Book'
+        '400':
+          description: Bad request due to invalid query parameters
+        '401':
+          description: Unauthorized - missing or invalid Microsoft Entra External ID JWT
+    post:
+      summary: List a new book owned by a neighbor.
+      operationId: createBook
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - title
+                - author
+                - isbn
+                - condition
+                - photoUrl
+              properties:
+                title:
+                  type: string
+                author:
+                  type: string
+                isbn:
+                  type: string
+                  pattern: '^(97(8|9))?\d{9}(\d|X)$'
+                  description: ISBN-10 or ISBN-13 format
+                condition:
+                  $ref: '#/components/schemas/BookCondition'
+                photoUrl:
+                  type: string
+                  format: uri
+                  description: URI pointing to Azure Blob Storage
+      responses:
+        '201':
+          description: Book created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Book'
+        '400':
+          description: Bad request due to invalid payload
+        '401':
+          description: Unauthorized - missing or invalid Microsoft Entra External ID JWT
+  /books/{bookId}/loans:
+    post:
+      summary: Request to borrow a specific book (asynchronous processing).
+      operationId: requestLoan
+      parameters:
+        - name: bookId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: ID of the book to borrow
+      responses:
+        '202':
+          description: Loan request accepted for processing
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    format: uuid
+                  bookId:
+                    type: string
+                    format: uuid
+                  borrower:
+                    $ref: '#/components/schemas/UserPublic'
+                  status:
+                    type: string
+                    enum:
+                      - Requested
+                  requestedAt:
+                    type: string
+                    format: date-time
+        '400':
+          description: Bad request due to invalid bookId or request
+        '401':
+          description: Unauthorized - missing or invalid Microsoft Entra External ID JWT
+        '404':
+          description: Book not found
+  /loans/{loanId}:
+    patch:
+      summary: Update loan status by owner or borrower.
+      operationId: updateLoanStatus
+      parameters:
+        - name: loanId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: ID of the loan to update
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - status
+              properties:
+                status:
+                  $ref: '#/components/schemas/LoanStatus'
+      responses:
+        '200':
+          description: Loan updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Loan'
+        '400':
+          description: Bad request due to invalid payload or loanId
+        '401':
+          description: Unauthorized - missing or invalid Microsoft Entra External ID JWT
+        '404':
+          description: Loan not found
+  /books/{bookId}/loans/history:
+    get:
+      summary: Get past loan history for a specific book.
+      operationId: getBookLoanHistory
+      parameters:
+        - name: bookId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: ID of the book
+        - name: page
+          in: query
+          description: Page number for pagination
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+        - name: pageSize
+          in: query
+          description: Number of items per page
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+      responses:
+        '200':
+          description: Paginated list of historic loan transactions for the book
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/PaginatedResponse'
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Loan'
+        '400':
+          description: Bad request due to invalid parameters
+        '401':
+          description: Unauthorized - missing or invalid Microsoft Entra External ID JWT
+        '404':
+          description: Book not found
+components:
+  schemas:
+    BookCondition:
+      type: string
+      enum:
+        - New
+        - Mint
+        - Good
+        - Worn
+    BookStatus:
+      type: string
+      enum:
+        - Available
+        - Requested
+        - Lent
+    LoanStatus:
+      type: string
+      enum:
+        - Requested
+        - Active
+        - Declined
+        - Returned
+        - Overdue
+    UserPublic:
+      type: object
+      required:
+        - id
+        - displayName
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique user identifier
+        displayName:
+          type: string
+          description: User's display name
+    Book:
+      type: object
+      required:
+        - id
+        - title
+        - author
+        - isbn
+        - condition
+        - status
+        - photoUrl
+        - owner
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique book identifier
+        title:
+          type: string
+        author:
+          type: string
+        isbn:
+          type: string
+          pattern: '^(97(8|9))?\d{9}(\d|X)$'
+          description: ISBN-10 or ISBN-13 format
+        condition:
+          $ref: '#/components/schemas/BookCondition'
+        status:
+          $ref: '#/components/schemas/BookStatus'
+        photoUrl:
+          type: string
+          format: uri
+          description: URI pointing to Azure Blob Storage
+        owner:
+          $ref: '#/components/schemas/UserPublic'
+    Loan:
+      type: object
+      required:
+        - id
+        - bookId
+        - borrower
+        - status
+        - requestedAt
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique loan identifier
+        bookId:
+          type: string
+          format: uuid
+          description: ID of the loaned book
+        borrower:
+          $ref: '#/components/schemas/UserPublic'
+        status:
+          $ref: '#/components/schemas/LoanStatus'
+        requestedAt:
+          oneOf:
+            - type: string
+              format: date-time
+            - type: "null"
+          description: Timestamp when loan was requested
+        startedAt:
+          type:
+            - string
+            - "null"
+          format: date-time
+          description: Timestamp when loan started
+        dueDate:
+          type:
+            - string
+            - "null"
+          format: date-time
+          description: Due date for returning the book
+    PaginatedResponse:
+      type: object
+      required:
+        - page
+        - pageSize
+        - totalItems
+        - items
+      properties:
+        page:
+          type: integer
+          minimum: 1
+          description: Current page number
+        pageSize:
+          type: integer
+          minimum: 1
+          description: Number of items per page
+        totalItems:
+          type: integer
+          minimum: 0
+          description: Total number of items available
+        items:
+          type: array
+          description: Array of items for the current page
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+security:
+  - bearerAuth: []
