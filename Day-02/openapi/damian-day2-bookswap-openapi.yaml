@@ -4,7 +4,7 @@ info:
   version: 1.0.0
   description: API for BookSwap, a community book-sharing application for neighbors in a Colombo apartment block.
 servers:
-  - url: https://api.bookswap.colombo/v1
+  - url: http://localhost:4010
 paths:
   /books:
     get:
