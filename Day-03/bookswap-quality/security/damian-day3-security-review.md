@@ -1,12 +1,5 @@
 # BookSwap API – Security Review
 
-**API version:** 1.0.0  
-**OpenAPI spec:** `damian-day2-bookswap-openapi.yaml`  
-**ZAP baseline scan:** `damian-day3-zap-baseline-report.html` (ZAP 2.17.0, run 25 May 2026)  
-**Reviewer:** Damian – Day 3 Security Assessment  
-
----
-
 ## Minimum Findings Checklist
 
 - [x] At least one Broken Object Level Authorization (BOLA) scenario described  
@@ -60,14 +53,14 @@ The combination of `Access-Control-Allow-Origin: *` with `Access-Control-Allow-C
 **Endpoint:** `PATCH /loans/{loanId}`
 
 **Preconditions:**
-- User A (Alice, `sub: alice-uuid`) has a loan `loanId = f47ac10b-58cc-4372-a567-0e02b2c3d479` with status `Active`.
-- User B (Bob, `sub: bob-uuid`) has a valid JWT but is neither the borrower nor the book owner for this loan.
+- User A (A, `sub: a-uuid`) has a loan `loanId = f47ac10b-58cc-4372-a567-0e02b2c3d479` with status `Active`.
+- User B (B, `sub: b-uuid`) has a valid JWT but is neither the borrower nor the book owner for this loan.
 
-**Attack request (Bob's token):**
+**Attack request (B's token):**
 
 ```http
 PATCH http://localhost:4010/loans/f47ac10b-58cc-4372-a567-0e02b2c3d479 HTTP/1.1
-Authorization: Bearer <bob-valid-jwt>
+Authorization: Bearer < b-valid-jwt>
 Content-Type: application/json
 
 {"status": "Returned"}
@@ -76,4 +69,4 @@ Content-Type: application/json
 **Expected (secure) response:** `403 Forbidden`  
 **Vulnerable response (no ownership check):** `200 OK` with the loan now marked `Returned`
 
-**Impact:** Bob falsely closes Alice's loan, allowing Alice to borrow a second copy of the same book; the book owner never receives confirmation the book was returned; loan history is corrupted. In a broader attack, Bob could look up `loanId` values from the loan history endpoint and mass-close all active loans in the building.
+**Impact:** User B falsely closes User A's loan, allowing User A to borrow a second copy of the same book; the book owner never receives confirmation the book was returned; loan history is corrupted. In a broader attack, a user could look up `loanId` values from the loan history endpoint and mass-close all active loans in the building.
