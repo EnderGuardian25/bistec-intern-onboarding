@@ -10,7 +10,6 @@
 - **Metrics: Azure Application Insights**
   - Request metrics: HTTP request count, success rate, and duration collected automatically by the App Insights SDK for every endpoint.
   - Dependency metrics: Latency and failure rate for outbound calls to the SQL database, Redis cache, Azure Blob Storage, and Service Bus — all tracked as dependency telemetry.
-  - Custom metrics: `search.latency.p95`, `listing.creation.success_rate`, `photo.db.blob_writes` (must stay 0), `notification.delivery.success_rate`, `privacy.pii_field_exposure` (must stay 0), `servicebus.email_queue.depth`.
 
 - **Traces: Application Insights distributed tracing**
   - Sample rate: 100% for any span with an error or duration > 500 ms. 10% head-based sampling for healthy fast requests to keep ingestion costs low.
