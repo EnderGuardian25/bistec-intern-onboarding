@@ -1,4 +1,4 @@
-# BookSwap — Simple Reliability Runbook (v0.1-simplified)
+# BookSwap — Reliability Runbook
 
 This guide outlines how to handle system issues during our upcoming feature in The Sunday Times and manage the transition from 1 building to 200 buildings. It covers what happens when things break, how to spot the issue, and what steps to take.
 
