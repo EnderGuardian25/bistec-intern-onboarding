@@ -30,6 +30,3 @@
 * The **Product Manager (PM)** and the **Lead Reliability/Software Engineer** jointly own the decision to freeze feature branches and execute the budget policy. The **Chief Information Security Officer (CISO)** or Designated Privacy Officer has unilateral authority to halt services in the event of an SLO-5 privacy breach.
 
 ## 4. Out of Budget Right Now
-
-### One sentence statement
-I would bet we cannot meet **SLO-2 (Listing Creation Resiliency)** today because if the email notification service is currently tightly coupled synchronously to the listing creation controller, any downstream email outage will cascade and block the user from successfully completing their book swap post.
