@@ -14,7 +14,7 @@ Accepted (date: 2026-05-28)
 
 ## Decision
 
-We deploy the GreenChit backend API and the React frontend on **Azure App Service (Standard S1 tier)**. The backend runs as a .NET Core Web App; the frontend is served as a static site via the same App Service or Azure Static Web Apps (a companion PaaS service in the same family).
+We deploy the GreenChit backend API and the React frontend on **Azure App Service (Standard S1 tier)**. The backend runs as a .NET Core Web App; the frontend is served as a static site via the same App Service.
 
 We do not use Azure Container Apps for the initial release. If future requirements introduce a need for per-revision traffic splitting, sidecar patterns, or scale-to-zero economics at significant traffic volume, we will revisit this decision via a superseding ADR.
 
@@ -28,7 +28,6 @@ We do not use Azure Container Apps for the initial release. If future requiremen
 **Harder**
 - App Service does not scale to zero. We pay for compute even when no staff member is actively using GreenChit. At S1 pricing (~$70/month) this is acceptable, but it is real money for a tool with idle overnight periods.
 - If GreenChit eventually needs to run as multiple isolated microservices with per-service scaling, migrating away from App Service will require containerising the application and re-platforming. We are accepting this future migration cost consciously.
-- We cannot use Dapr sidecars or advanced traffic splitting features that Container Apps provides natively. Any A/B testing or canary deployments will require manual workarounds.
 
 **Different**
 - The operations runbook is simpler than a container-based runbook: restart, swap slots, check log stream. Engineers do not need to understand pod scheduling or container restarts.
@@ -36,7 +35,3 @@ We do not use Azure Container Apps for the initial release. If future requiremen
 ## Alternatives Considered
 
 **Azure Container Apps** — Offers scale-to-zero and modern container-native features, but requires the team to maintain container images, a container registry, and understand revision management. The operational overhead is not justified by GreenChit's current scale or the team's current experience level. Rejected for initial release.
-
-**Azure Kubernetes Service (AKS)** — Full Kubernetes control, but dramatically over-engineered for a single internal tool. Cluster maintenance, node pool upgrades, and networking configuration would consume more engineering time than the application itself. Rejected.
-
-**Azure Functions (Consumption Plan)** — Attractive for true serverless economics, but a REST API with complex business logic (claims lifecycle, audit trail writes, JWT auth middleware) does not decompose naturally into stateless functions. Cold start latency would also be noticeable on the mobile submission flow. Rejected.

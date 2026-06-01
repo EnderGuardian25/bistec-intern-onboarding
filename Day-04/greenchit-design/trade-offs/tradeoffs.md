@@ -43,7 +43,7 @@ Package the frontend and backend as separate Docker containers and deploy them i
 
 **We choose Option A: Azure App Service Monolith.**
 
-The scores are 21 to 20, which reflects the fact that Container Apps are genuinely a good option but not at this stage.
+The scores are 21 to 20, which shows the fact that Container Apps are genuinely a good option but not at this stage.
 
 **Time-to-first-deploy** had the biggest gap (5 vs 2). As a learning team, spending the first week fighting Docker and container registries instead of building the claims workflow would be a real setback. App Service lets us get something running quickly and iterate from there.
 

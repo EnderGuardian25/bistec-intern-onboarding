@@ -26,10 +26,10 @@ Each ADR follows a fixed template: Status, Context, Decision, Consequences, and 
 **Harder**
 - Engineers must slow down and write before they build. Under deadline pressure this will feel like overhead, and there will be a temptation to skip it.
 - There is no enforcement mechanism other than pull request review discipline. If reviewers don't insist on ADRs, the practice will quietly die.
-- The ADR format can give a false sense of rigour — a poorly reasoned ADR filed promptly is worse than no ADR, because it buries the real reasoning under confident-sounding prose.
+- A poorly reasoned ADR filed promptly is worse than no ADR, because it buries the real reasoning under confident-sounding solutions.
 
 **Different**
-- Architecture discussions shift from Slack threads (ephemeral, unsearchable) to committed Markdown (permanent, diffable). The repository becomes the authoritative record of intent, not individual memory.
+- Architecture discussions shift from individual decisions to a committed Markdown file. The repository becomes the authoritative record of intent, not individual memory.
 
 ## Alternatives Considered
 

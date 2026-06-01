@@ -10,7 +10,7 @@ Accepted (date: 2026-05-28)
 - The team has prior experience with SQL. Nobody on the current team has operated a Cosmos DB collection in production.
 - BISTEC's finance exports must produce deterministic, consistent snapshots: the payroll batch export cannot tolerate eventual consistency windows where an "Approved" claim is briefly invisible to the export query.
 - The audit log is the most sensitive table: it must be append-only, and queries against it (e.g. "show all state changes for claim X") are simple range scans by claim ID and timestamp — a workload SQL handles natively.
-- We do not yet know the exact volume of claims per month. Estimates suggest fewer than 500 claims/month for the initial BISTEC rollout, growing to perhaps 2,000/month if adopted across all subsidiaries.
+- We do not yet know the exact volume of claims per month. Estimates suggest fewer than 500 claims/month for the initial BISTEC rollout.
 - Two realistic Azure options: **Azure SQL** and **Azure Cosmos DB**
 
 ## Decision
@@ -28,9 +28,9 @@ Cosmos DB is not used. If GreenChit eventually requires globally distributed rea
 - ACID transactions mean the claim state update and the audit log insert always succeed or fail together. There is no application logic needed to compensate for partial writes.
 
 **Harder**
-- Azure SQL does not scale to zero. The database incurs cost even when idle, just like App Service. Combined, these two choices commit us to a non-trivial minimum monthly bill even for zero usage.
+- Azure SQL does not scale to zero. The database incurs cost even when idle, just like App Service. Combined, these two choices commit us to a minimum monthly bill even for zero usage.
 - Schema migrations require downtime planning as the data volume grows. Adding a column to the claims table at 500 rows is instant; at 500,000 rows with active payroll exports running, it requires a migration strategy. We are accepting this future operational cost.
-- If requirements emerge for flexible, schema-less claim metadata (e.g. different expense categories requiring different custom fields per category), a relational schema will require a migration for each new field. A document store would handle this more gracefully.
+- If requirements emerge for flexible, schema-less claim metadata like different expense categories requiring different custom fields per category, a relational schema will require a migration for each new field. A document store would handle this more gracefully.
 
 **Different**
 - Querying is done in T-SQL, which every team member already knows. Code reviews for database queries are accessible to the whole team, not just a specialist.
@@ -38,7 +38,3 @@ Cosmos DB is not used. If GreenChit eventually requires globally distributed rea
 ## Alternatives Considered
 
 **Azure Cosmos DB (Core API)** — Globally distributed, schema-flexible, and scales to zero on the serverless tier. However, the claims data is naturally relational, the team has no Cosmos DB experience, and strong consistency (required for audit log correctness) costs additional RU budget that is difficult to estimate. The document model would require denormalising claims with embedded approval history, making the payroll export query non-trivial. Rejected.
-
-**PostgreSQL on Azure Database for PostgreSQL** — A legitimate alternative with strong community support and comparable features. Rejected only because BISTEC's existing team experience and Azure support agreements favour SQL Server/Azure SQL. If team composition changes, this decision is worth revisiting.
-
-**SQLite (development only)** — Used in local development and automated tests via EF Core's in-memory or SQLite provider. This is not a production decision; it does not require its own ADR.
