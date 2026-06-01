@@ -1,27 +1,17 @@
 # ADR 0003: Database — Azure SQL over Cosmos DB
 
 ## Status
-Accepted (date: 2025-01-15)
+Accepted (date: 2026-05-28)
 
 ## Context
 
 - GreenChit needs to persist: expense claims (with status, amounts, category codes), audit log rows (every state transition, immutable), user/role data, and receipt metadata (blob keys, MIME types, hashes).
-- The data is inherently relational. A claim belongs to a claimant, is approved by a manager, and is exported by a finance user. Audit rows reference claim IDs. Role assignments reference user IDs. Foreign key constraints and join queries are natural operations for this shape of data.
-- The team has prior experience with SQL (university coursework, previous internships). Nobody on the current team has operated a Cosmos DB collection in production.
+- The data is inherently relational. A claim belongs to a claimant, is approved by a manager, and is exported by a finance user. Audit rows reference claim IDs. Role assignments reference user IDs. 
+- The team has prior experience with SQL. Nobody on the current team has operated a Cosmos DB collection in production.
 - BISTEC's finance exports must produce deterministic, consistent snapshots: the payroll batch export cannot tolerate eventual consistency windows where an "Approved" claim is briefly invisible to the export query.
 - The audit log is the most sensitive table: it must be append-only, and queries against it (e.g. "show all state changes for claim X") are simple range scans by claim ID and timestamp — a workload SQL handles natively.
 - We do not yet know the exact volume of claims per month. Estimates suggest fewer than 500 claims/month for the initial BISTEC rollout, growing to perhaps 2,000/month if adopted across all subsidiaries.
-- Two realistic Azure options: **Azure SQL** (managed relational, T-SQL) and **Azure Cosmos DB** (globally distributed NoSQL, document model).
-
-| Factor | Azure SQL | Azure Cosmos DB |
-|---|---|---|
-| Data model fit | Strong — relational schema, FK constraints | Weak — claims don't decompose cleanly into independent documents |
-| Consistency | Strong (ACID transactions) | Configurable (default eventual; strong consistency costs RU budget) |
-| Team familiarity | High | Low |
-| Joins across entities | Native, efficient | Expensive or impossible without denormalisation |
-| Audit log immutability | Enforced via SQL constraints and triggers | Must be enforced in application code |
-| Cost at low volume | Predictable (DTU or vCore tier) | RU-based billing can be hard to predict during development |
-| Global distribution | Read replicas available | First-class feature — unnecessary for a single-region internal tool |
+- Two realistic Azure options: **Azure SQL** and **Azure Cosmos DB**
 
 ## Decision
 

@@ -1,7 +1,7 @@
 # ADR 0004: Receipt Storage and Virus Scanning — Azure Blob Storage with Defender for Storage
 
 ## Status
-Accepted (date: 2025-01-15)
+Accepted (date: 2026-05-28)
 
 ## Context
 

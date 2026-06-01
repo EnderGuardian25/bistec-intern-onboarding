@@ -1,7 +1,7 @@
 # ADR 0001: Record Architecture Decisions
 
 ## Status
-Accepted (date: 2025-01-15)
+Accepted (date: 2026-05-28)
 
 ## Context
 
@@ -36,5 +36,3 @@ Each ADR follows a fixed template: Status, Context, Decision, Consequences, and 
 **Wiki pages** — A Confluence or Notion page per decision is easier to edit collaboratively, but edits erase history and there is no convention for marking a decision as superseded versus just quietly wrong. Rejected because mutability undermines the purpose.
 
 **No formal record** — Acceptable for a two-day prototype; not acceptable for a system that will process real payroll exports and carry a compliance audit trail. Rejected.
-
-**RFC process with approval gates** — More rigorous, but disproportionate for a team of this size. Can be adopted later if GreenChit grows. Rejected for now.

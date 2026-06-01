@@ -1,27 +1,16 @@
 # ADR 0002: Hosting Platform — Azure App Service over Azure Container Apps
 
 ## Status
-Accepted (date: 2025-01-15)
+Accepted (date: 2026-05-28)
 
 ## Context
 
-- GreenChit's backend is a .NET Core Web API and its frontend is a React SPA. Both need to be hosted on Azure (mandated by BISTEC's existing cloud agreement).
+- GreenChit's backend is a .NET Core Web API and its frontend is a React SPA. Both need to be hosted on Azure.
 - The team is composed of early-career engineers. Most have touched Azure through tutorials but nobody has operated Kubernetes or container orchestration in production.
 - The system has a predictable, low-to-moderate load profile: BISTEC staff submitting expenses is not a bursty, unpredictable workload. Peak usage occurs around month-end payroll cycles.
 - We need the platform to support managed TLS, custom domains, deployment slots for staging/production swap, and straightforward integration with Azure SQL and Azure Blob Storage.
 - We do not yet know whether GreenChit will need to run background workers or scheduled jobs at scale; the current scope is limited to a Service Bus consumer for notifications.
-- Two realistic Azure options exist: **Azure App Service** (PaaS, server-abstracted) and **Azure Container Apps** (container-native, Kubernetes-based under the hood).
-
-| Factor | Azure App Service | Azure Container Apps |
-|---|---|---|
-| Operational complexity | Low — deploy a ZIP or container, managed runtime | Medium — requires container images, registry, revision management |
-| Team familiarity | High — standard PaaS model | Low — container orchestration concepts are new to the team |
-| Scale-to-zero | No (Basic/Standard tiers always-on) | Yes |
-| Deployment slots | Yes (Standard tier and above) | No native equivalent |
-| .NET runtime support | First-class, built-in | Via container image only |
-| Cost at low traffic | Predictable flat rate | Potentially cheaper if scale-to-zero is used, but management overhead is real |
-| Managed TLS / custom domain | Built-in | Built-in |
-| Dapr / sidecar support | No | Yes |
+- Two realistic Azure options exist: **Azure App Service** and **Azure Container Apps**.
 
 ## Decision
 
