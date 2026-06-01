@@ -5,7 +5,6 @@ Below is the complete spec and acceptance criteria. Implement the feature so tha
 
 Constraints:
 - Touch only files under `src/` and `tests/`
-- Use the existing Application Insights client already available on `global.__appInsights`
 - Do NOT invent fields, endpoints, or behaviour not in the spec
 - Separate the LLM path and rule-based path into their own files
 - Before writing code, list any ambiguities you would want clarified
