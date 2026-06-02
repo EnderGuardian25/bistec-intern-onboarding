@@ -17,7 +17,7 @@ This feature reads the uploaded receipt and suggests the correct category automa
 - Show the suggestion with a confidence score; claimant can accept or override
 - Fall back to a rule-based suggestion if Azure OpenAI is unavailable
 
-**Affects:** GreenChit Claims API (existing service from Day 4). No other containers are changed.
+**Affects:** GreenChit Claims API. No other containers are changed.
 
 ---
 
@@ -49,14 +49,14 @@ Confidence below 0.6 must be shown to the claimant as "Needs review".
 | 502 | Azure Document Intelligence or Azure OpenAI unavailable and rule-based fallback also failed |
 
 ### Side Effects
-- An Application Insights `customEvent` named `categoriser.suggested` is emitted for every request (successful or fallback). It must not contain PII or card numbers.
+- An Application Insights `customEvent` named `categoriser.suggested` is emitted for every request (successful or fallback). It must not contain PII..
 - The suggestion and whether the claimant accepted or overrode it is stored for future model evaluation.
 
 ---
 
 ## 4. Acceptance Criteria
 
-See `acceptance.md`.
+`acceptance.md`.
 
 ---
 
