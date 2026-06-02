@@ -79,8 +79,7 @@ Confidence below 0.6 must be shown to the claimant as "Needs review".
 ## 6. Out of Scope
 
 - Uploading multiple receipts in a single categorise request (batch)
-- Auto-submitting the claim without the claimant confirming the category
-- Learning from claimant overrides in v1 (active learning deferred)
+- Learning from claimant overrides
 - Extracting or storing individual line items from the receipt
 - Supporting file formats other than JPEG and PNG (e.g. PDF, HEIC)
 
