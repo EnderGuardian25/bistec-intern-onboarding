@@ -25,7 +25,7 @@ async function extractTextWithDocumentIntelligence(imageBuffer: Buffer): Promise
       'Ocp-Apim-Subscription-Key': key,
       'Content-Type': 'application/octet-stream',
     },
-    body: imageBuffer,
+    body: new Uint8Array(imageBuffer),
   });
 
   if (!response.ok) {
