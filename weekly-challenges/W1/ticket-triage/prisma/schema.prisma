@@ -1,0 +1,17 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Ticket {
+  id        Int      @id @default(autoincrement())
+  title     String
+  priority  String   @default("P1")
+  owner     String?
+  status    String   @default("open")
+  createdAt DateTime @default(now())
+}
