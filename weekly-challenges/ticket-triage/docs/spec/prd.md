@@ -2,9 +2,9 @@
 
 ## 1. Persona
 
-**Name:** Maya — PMO Coordinator  
+**Name:** PMO Coordinator  
 **Role:** Project Management Office staff at Bistec Global  
-**Context:** Maya manages 3–5 active internal projects simultaneously. She receives tickets from multiple engineering teams via Slack, email, and GitHub Issues. Each morning she spends 20–30 minutes manually sorting through a shared spreadsheet to figure out what is blocked, what is urgent, and who owns what.  
+**Context:** They manage 3–5 active internal projects simultaneously. Receives tickets from multiple engineering teams via Slack, email, and GitHub Issues. Each morning they spend 20–30 minutes manually sorting through a shared spreadsheet to figure out what is blocked, what is urgent, and who owns what.  
 **Pain Point:** There is no single view of open tickets ranked by priority. Tickets sit in a spreadsheet with no ownership enforcement and no badge summary. Maya often escalates the wrong issue first because severity is not visible at a glance.  
 **Technical comfort:** Non-technical. Uses browser-based tools only.
 
