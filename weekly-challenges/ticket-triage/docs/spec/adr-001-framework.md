@@ -13,7 +13,7 @@ Use **Next.js 15 App Router** with TypeScript strict mode.
 
 ## Reasoning
 
-Next.js provides co-located API routes (Route Handlers) and server components in the same project. The Bistec stack already uses Next.js on other internal tools, so onboarding friction is low. The App Router's server components reduce client-side JavaScript for the list view, helping hit the < 1.5s render target.
+Next.js provides co-located API routes (Route Handlers) and server components in the same project. The App Router's server components reduce client-side JavaScript for the list view, helping hit the < 1.5s render target.
 
 ## Rejected Alternatives
 
